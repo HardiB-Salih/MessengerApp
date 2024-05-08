@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -26,11 +27,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(userDefaultsDidChange), name: UserDefaults.didChangeNotification, object: nil)
     }
     
-    private func reloadRootViewController() {
-        let isLoggedIn = UserDefaults.standard.bool(forKey: "logged_in")
+    private func reloadRootViewController() {        
         let rootViewController: UIViewController
         
-        if isLoggedIn {
+        if FirebaseAuth.Auth.auth().currentUser != nil {
             let vc = ConversationsViewController()
             let navVC = UINavigationController(rootViewController: vc)
             let backButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)

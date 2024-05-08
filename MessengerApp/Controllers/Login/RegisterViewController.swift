@@ -175,7 +175,7 @@ class RegisterViewController: UIViewController {
     
     /// Save the updated value of logged_in to UserDefaults
     private func userLoggedIn(){
-        UserDefaults.standard.set(true, forKey: "logged_in")
+//        UserDefaults.standard.set(true, forKey: "logged_in")
         NotificationCenter.default.post(name: UserDefaults.didChangeNotification, object: nil)
     }
     
@@ -198,24 +198,32 @@ class RegisterViewController: UIViewController {
             return
         }
         
-        FirebaseAuth.Auth.auth().createUser(withEmail: email, 
-                                            password: password,
-                                            completion: { authResult, error in
-            guard let result = authResult, error == nil else {
-                self.showAlert(title: "Create Account Error", message: "User did not create becase of \(error?.localizedDescription ?? "")")
+        
+        DatabaseManager.userExists(with: email) {[weak self] isExist in
+            guard let strongSelf = self else { return }
+            guard !isExist else {
+                strongSelf.showAlert(title: "Opps", message: "userAlready Exist")
                 return
             }
             
-            let user = result.user
-            print("create a user: \(user)")
-            self.userLoggedIn()
-        })
-        
-        
-        
-        
-        
-        
+            FirebaseAuth.Auth.auth().createUser(withEmail: email,
+                                                password: password,
+                                                completion: { authResult, error in
+                guard authResult != nil, error == nil else {
+                    strongSelf.showAlert(title: "Create Account Error", message: "User did not create becase of \(error?.localizedDescription ?? "")")
+                    return
+                }
+                
+                let chatAppUser = ChatAppUser(firstName: firstname,
+                                              lastname: lastname,
+                                              emailAddress: email)
+                
+                DatabaseManager.insertUser(with: chatAppUser)
+                strongSelf.userLoggedIn()
+            })
+            
+            
+        }
     }
     
     @objc private func handleImageViewTap() {

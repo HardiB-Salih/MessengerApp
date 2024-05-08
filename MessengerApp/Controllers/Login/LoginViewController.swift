@@ -82,7 +82,7 @@ class LoginViewController: UIViewController {
             target: self,
             action: #selector(registerButtonTapped))
         
-        loginButon.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
+        loginButon.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         
         emailField.delegate = self
         passwordField.delegate = self
@@ -111,7 +111,6 @@ class LoginViewController: UIViewController {
     //MARK: -Private
     /// Save the updated value of logged_in to UserDefaults
     private func userLoggedIn(){
-        UserDefaults.standard.set(true, forKey: "logged_in")
         NotificationCenter.default.post(name: UserDefaults.didChangeNotification, object: nil)
     }
     
@@ -129,17 +128,15 @@ class LoginViewController: UIViewController {
             return
         }
         
-        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { authResult, error in
-            guard let result = authResult, error == nil else {
-                self.showAlert(title: "Woops", message: "Failed to log in user with email: \(email)")
+        
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult, error in
+            guard let strongSelf = self else { return }
+            guard authResult != nil, error == nil else {
+                strongSelf.showAlert(title: "Woops", message: "Failed to log in user with email: \(email)")
                 return
             }
-            
-            let user = result.user
-            print("SignIn User: \(result)")
-            self.userLoggedIn()
+            strongSelf.userLoggedIn()
         })
-        
     }
     
     @objc private func registerButtonTapped() {
