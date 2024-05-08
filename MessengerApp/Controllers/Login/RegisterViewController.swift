@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import PhotosUI
+import FirebaseAuth
 
 class RegisterViewController: UIViewController {
     
@@ -15,6 +17,13 @@ class RegisterViewController: UIViewController {
         return scrollView
     }()
     
+    private let  activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .systemGray
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "profile")
@@ -22,7 +31,7 @@ class RegisterViewController: UIViewController {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 50
         imageView.layer.cornerCurve = .continuous
-        imageView.layer.borderWidth = 1
+        imageView.layer.borderWidth = 2
         imageView.layer.borderColor = UIColor.systemGray.withAlphaComponent(0.3).cgColor
         imageView.clipsToBounds = true
         return imageView
@@ -112,7 +121,7 @@ class RegisterViewController: UIViewController {
         
         title = "Create Account"
         view.backgroundColor = .systemBackground
-    
+        
         setUpSelecters()
         setUpTextField()
         setUpSubviews()
@@ -124,6 +133,7 @@ class RegisterViewController: UIViewController {
         scrollView.frame = view.bounds
         let size = scrollView.width / 3
         imageView.frame = CGRect(x: (scrollView.width - size) / 2, y: 20, width: size, height: size)
+        activityIndicator.frame = CGRect(x: imageView.bounds.midX - 15, y: imageView.bounds.midX - 15 , width: 30, height: 30)
         firstNameField.frame = CGRect(x: 30, y: imageView.bottom + 30, width: scrollView.width - 60, height: 44)
         lastNameField.frame = CGRect(x: 30, y: firstNameField.bottom + 10, width: scrollView.width - 60, height: 44)
         emailField.frame = CGRect(x: 30, y: lastNameField.bottom + 10, width: scrollView.width - 60, height: 44)
@@ -135,7 +145,7 @@ class RegisterViewController: UIViewController {
     
     //MARK: -Private
     private func setUpSelecters() {
-
+        
         // Add tap gesture recognizer
         imageView.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleImageViewTap))
@@ -155,11 +165,18 @@ class RegisterViewController: UIViewController {
     private func setUpSubviews() {
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
+        imageView.addSubview(activityIndicator)
         scrollView.addSubview(firstNameField)
         scrollView.addSubview(lastNameField)
         scrollView.addSubview(emailField)
         scrollView.addSubview(passwordField)
         scrollView.addSubview(rigesterButon)
+    }
+    
+    /// Save the updated value of logged_in to UserDefaults
+    private func userLoggedIn(){
+        UserDefaults.standard.set(true, forKey: "logged_in")
+        NotificationCenter.default.post(name: UserDefaults.didChangeNotification, object: nil)
     }
     
     //MARK: -OBJC Functions
@@ -180,12 +197,30 @@ class RegisterViewController: UIViewController {
                            message: "please enter all information to create a new account")
             return
         }
+        
+        FirebaseAuth.Auth.auth().createUser(withEmail: email, 
+                                            password: password,
+                                            completion: { authResult, error in
+            guard let result = authResult, error == nil else {
+                self.showAlert(title: "Create Account Error", message: "User did not create becase of \(error?.localizedDescription ?? "")")
+                return
+            }
+            
+            let user = result.user
+            print("create a user: \(user)")
+            self.userLoggedIn()
+        })
+        
+        
+        
+        
+        
+        
     }
     
     @objc private func handleImageViewTap() {
-        // Handle tap on imageView here
-        print("Profile image tapped")
-        // You can perform any action here, such as showing a larger version of the image or navigating to another view
+        //        userLoggedIn()
+        presentPhotoActionSheet()
     }
 }
 
@@ -205,4 +240,82 @@ extension RegisterViewController: UITextFieldDelegate {
         }
         return true
     }
+}
+
+//MARK: - Selecting and taking photo
+extension RegisterViewController: UIImagePickerControllerDelegate, PHPickerViewControllerDelegate, UINavigationControllerDelegate{
+
+    
+    private func presentPhotoActionSheet(){
+        let actionSheet = UIAlertController(title: "Profile Picture",
+                                            message: "How would your like to select a picture?",
+                                            preferredStyle: .actionSheet)
+        
+        let cancelButton = UIAlertAction(title: "Cancel",
+                                         style: .cancel,
+                                         handler: nil)
+        let takePhotoButton = UIAlertAction(title: "Take Photo",
+                                            style: .default,
+                                            handler:  { [weak self] _ in  self?.presentCamera() })
+        let chosePhotoButton = UIAlertAction(title: "Chose Photo",
+                                             style: .default,
+                                             handler:  { [weak self] _ in  self?.presentPhotoPicker() })
+        
+        actionSheet.addAction(cancelButton)
+        actionSheet.addAction(takePhotoButton)
+        actionSheet.addAction(chosePhotoButton)
+        
+        
+        present(actionSheet, animated: true)
+    }
+    
+    func presentCamera(){ 
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            showAlert(title: "Camera error",
+                      message: "Check your mobile camera not working.")
+            return
+        }
+        let vc = UIImagePickerController()
+        vc.sourceType = .camera
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
+    }
+    func presentPhotoPicker(){
+        let picker = PHPickerViewController(configuration: PHPickerConfiguration())
+        picker.delegate = self
+        present(picker, animated: true, completion: nil)
+    }
+    
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        
+        if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage {
+            imageView.image = image
+        }
+    }
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        dismiss(animated: true, completion: nil)
+        
+        for result in results {
+            activityIndicator.startAnimating()
+            // Process the selected item
+            if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
+                result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+                    guard let image = image as? UIImage else { return }
+                    // Do something with the selected image
+                    DispatchQueue.main.async {
+                        self?.activityIndicator.stopAnimating()
+                        self?.imageView.image = image
+                    }
+                }
+            }
+        }
+    }
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) { 
+        dismiss(animated: true, completion: nil)
+    }
+    
 }

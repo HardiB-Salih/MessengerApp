@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
@@ -107,7 +108,14 @@ class LoginViewController: UIViewController {
         
     }
     
+    //MARK: -Private
+    /// Save the updated value of logged_in to UserDefaults
+    private func userLoggedIn(){
+        UserDefaults.standard.set(true, forKey: "logged_in")
+        NotificationCenter.default.post(name: UserDefaults.didChangeNotification, object: nil)
+    }
     
+    //MARK: -OBJC
     @objc private func loginButtonTapped() {
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
@@ -120,6 +128,18 @@ class LoginViewController: UIViewController {
                            message: "please enter all information to log in")
             return
         }
+        
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { authResult, error in
+            guard let result = authResult, error == nil else {
+                self.showAlert(title: "Woops", message: "Failed to log in user with email: \(email)")
+                return
+            }
+            
+            let user = result.user
+            print("SignIn User: \(result)")
+            self.userLoggedIn()
+        })
+        
     }
     
     @objc private func registerButtonTapped() {
