@@ -28,6 +28,8 @@
 		D516F3182BEC2D060018D9FD /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D516F3172BEC2D060018D9FD /* TabBarController.swift */; };
 		D516F31A2BEC2D400018D9FD /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D516F3192BEC2D400018D9FD /* SettingViewController.swift */; };
 		D516F31C2BEC39EB0018D9FD /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D516F31B2BEC39EB0018D9FD /* CustomTabBar.swift */; };
+		D54300672BED375C00F4966C /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54300662BED375C00F4966C /* ChatViewController.swift */; };
+		D54300692BED3AE700F4966C /* ProfileViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54300682BED3AE700F4966C /* ProfileViewTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		D516F3172BEC2D060018D9FD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		D516F3192BEC2D400018D9FD /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		D516F31B2BEC39EB0018D9FD /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
+		D54300662BED375C00F4966C /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		D54300682BED3AE700F4966C /* ProfileViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +113,7 @@
 				D516F2FA2BEA54240018D9FD /* ProfileViewController.swift */,
 				D516F3172BEC2D060018D9FD /* TabBarController.swift */,
 				D516F3192BEC2D400018D9FD /* SettingViewController.swift */,
+				D54300662BED375C00F4966C /* ChatViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -119,6 +124,7 @@
 				D516F2ED2BEA526D0018D9FD /* Storyboard */,
 				D516F2DD2BEA50610018D9FD /* Assets.xcassets */,
 				D516F31B2BEC39EB0018D9FD /* CustomTabBar.swift */,
+				D54300682BED3AE700F4966C /* ProfileViewTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -254,10 +260,12 @@
 			files = (
 				D516F2F12BEA53A70018D9FD /* LoginViewController.swift in Sources */,
 				D516F31C2BEC39EB0018D9FD /* CustomTabBar.swift in Sources */,
+				D54300672BED375C00F4966C /* ChatViewController.swift in Sources */,
 				D516F3182BEC2D060018D9FD /* TabBarController.swift in Sources */,
 				D516F2F32BEA53BA0018D9FD /* RegisterViewController.swift in Sources */,
 				D516F2D52BEA505F0018D9FD /* AppDelegate.swift in Sources */,
 				D516F3002BEAB5600018D9FD /* Extentions.swift in Sources */,
+				D54300692BED3AE700F4966C /* ProfileViewTableViewCell.swift in Sources */,
 				D516F31A2BEC2D400018D9FD /* SettingViewController.swift in Sources */,
 				D516F2F72BEA53EE0018D9FD /* VideoPlayerViewController.swift in Sources */,
 				D516F2D72BEA505F0018D9FD /* SceneDelegate.swift in Sources */,

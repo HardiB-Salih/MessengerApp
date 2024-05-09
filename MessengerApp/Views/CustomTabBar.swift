@@ -13,7 +13,7 @@ class CustomTabBar: UITabBar {
         super.layoutSubviews()
         
         // Round the corners of the tab bar
-        self.layer.cornerRadius = 30
+        self.layer.cornerRadius = 25
         self.layer.cornerCurve = .continuous
 //        self.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
 //        self.backgroundColor = .secondarySystemBackground.withAlphaComponent(0.4)
@@ -39,9 +39,10 @@ class CustomTabBar: UITabBar {
         self.insertSubview(blurEffectView, at: 0)
         
         // Position the tab bar with 10 points offset from bottom left and right
-        let tabBarHeight = self.frame.size.height
+//        let tabBarHeight = self.frame.size.height
+        let tabBarHeight = CGFloat(65)
         let tabBarWidth = self.superview!.bounds.width - CGFloat(30)
-        let tabBarX = CGFloat(15) // Offset from left
+        let tabBarX = CGFloat(15)
         let tabBarY = self.superview!.bounds.height - tabBarHeight - CGFloat(24) // Offset from bottom
         
 

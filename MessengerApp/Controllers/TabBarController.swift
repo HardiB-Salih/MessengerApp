@@ -13,23 +13,29 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         self.setValue(CustomTabBar(), forKey: "tabBar")
-
+        setUpTabBarItem()
+    }
+    
+    private func setUpTabBarItem() {
+        let backButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         let conversationVc = ConversationsViewController()
         let conversationNavVC = UINavigationController(rootViewController: conversationVc)
-        let backButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         conversationVc.navigationItem.backBarButtonItem = backButtonItem
         conversationNavVC.navigationBar.tintColor = .link
-        
-        let settingVc = SettingViewController()
-        let settingNavVC = UINavigationController(rootViewController: settingVc)
-        settingVc.navigationItem.backBarButtonItem = backButtonItem
-        settingNavVC.navigationBar.tintColor = .link
+        conversationNavVC.navigationBar.prefersLargeTitles = true
 
         
-        conversationNavVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(systemName: "ellipsis.message.fill"), tag: 0)
-        settingNavVC.tabBarItem = UITabBarItem(title: "Setting", image: UIImage(systemName: "gear"), tag: 0)
+        let ProfileVc = ProfileViewController()
+        let ProfileNavVC = UINavigationController(rootViewController: ProfileVc)
+        ProfileVc.navigationItem.backBarButtonItem = backButtonItem
+        ProfileNavVC.navigationBar.tintColor = .link
+        ProfileNavVC.navigationBar.prefersLargeTitles = true
 
-        viewControllers = [conversationNavVC, settingNavVC]
+        
+        conversationNavVC.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(systemName: "ellipsis.message.fill"), tag: 0)
+        ProfileNavVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle.fill"), tag: 0)
+
+        viewControllers = [conversationNavVC, ProfileNavVC]
     }
 }
 
