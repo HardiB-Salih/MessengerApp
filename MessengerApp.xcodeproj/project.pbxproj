@@ -25,6 +25,9 @@
 		D516F3122BEB83150018D9FD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D516F3112BEB83150018D9FD /* GoogleService-Info.plist */; };
 		D516F3142BEBFF420018D9FD /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D516F3132BEBFF420018D9FD /* DatabaseManager.swift */; };
 		D516F3162BEC007C0018D9FD /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D516F3152BEC007C0018D9FD /* FirebaseDatabaseSwift */; };
+		D516F3182BEC2D060018D9FD /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D516F3172BEC2D060018D9FD /* TabBarController.swift */; };
+		D516F31A2BEC2D400018D9FD /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D516F3192BEC2D400018D9FD /* SettingViewController.swift */; };
+		D516F31C2BEC39EB0018D9FD /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D516F31B2BEC39EB0018D9FD /* CustomTabBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +48,9 @@
 		D516F2FF2BEAB5600018D9FD /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
 		D516F3112BEB83150018D9FD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D516F3132BEBFF420018D9FD /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		D516F3172BEC2D060018D9FD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		D516F3192BEC2D400018D9FD /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		D516F31B2BEC39EB0018D9FD /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +107,8 @@
 				D516F2F62BEA53EE0018D9FD /* VideoPlayerViewController.swift */,
 				D516F2F82BEA54160018D9FD /* NewConversationsViewController.swift */,
 				D516F2FA2BEA54240018D9FD /* ProfileViewController.swift */,
+				D516F3172BEC2D060018D9FD /* TabBarController.swift */,
+				D516F3192BEC2D400018D9FD /* SettingViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -110,6 +118,7 @@
 			children = (
 				D516F2ED2BEA526D0018D9FD /* Storyboard */,
 				D516F2DD2BEA50610018D9FD /* Assets.xcassets */,
+				D516F31B2BEC39EB0018D9FD /* CustomTabBar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -244,9 +253,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D516F2F12BEA53A70018D9FD /* LoginViewController.swift in Sources */,
+				D516F31C2BEC39EB0018D9FD /* CustomTabBar.swift in Sources */,
+				D516F3182BEC2D060018D9FD /* TabBarController.swift in Sources */,
 				D516F2F32BEA53BA0018D9FD /* RegisterViewController.swift in Sources */,
 				D516F2D52BEA505F0018D9FD /* AppDelegate.swift in Sources */,
 				D516F3002BEAB5600018D9FD /* Extentions.swift in Sources */,
+				D516F31A2BEC2D400018D9FD /* SettingViewController.swift in Sources */,
 				D516F2F72BEA53EE0018D9FD /* VideoPlayerViewController.swift in Sources */,
 				D516F2D72BEA505F0018D9FD /* SceneDelegate.swift in Sources */,
 				D516F2FE2BEAB0270018D9FD /* HelperManager.swift in Sources */,
