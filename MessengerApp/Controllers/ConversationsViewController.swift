@@ -95,8 +95,24 @@ class ConversationsViewController: UIViewController {
     //MARK: Objc.
     @objc private func didTapComposeButton() {
         let vc = NewConversationsViewController()
+        vc.comptetion = {[weak self] result in
+            print(result)
+            self?.creatNewConversation(result: result)
+        }
         let navVc = UINavigationController(rootViewController: vc)
         present(navVc, animated: true)
+    }
+    
+    private func creatNewConversation(result: [String:String]) {
+        guard let name = result["name"], 
+              let email = result["email"] else { return }
+        
+        let vc = ChatViewController(with: email)
+        vc.isNewConversation = true
+        vc.title = name
+        vc.navigationItem.largeTitleDisplayMode = .never
+//        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func logoutButtonTapped() {
@@ -125,7 +141,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = ChatViewController()
+        let vc = ChatViewController(with: "")
         vc.title = "Hardi B Salih"
         vc.navigationItem.largeTitleDisplayMode = .never
 //        vc.hidesBottomBarWhenPushed = true

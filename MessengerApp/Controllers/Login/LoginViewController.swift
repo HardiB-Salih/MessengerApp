@@ -142,6 +142,7 @@ class LoginViewController: UIViewController {
                 strongSelf.showAlert(title: "Woops", message: "Failed to log in user with email: \(email)")
                 return
             }
+            UserDefaults.standard.set(email, forKey: "email")
             strongSelf.userLoggedIn()
         })
     }

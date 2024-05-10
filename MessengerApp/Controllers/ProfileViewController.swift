@@ -7,10 +7,19 @@
 
 import UIKit
 import FirebaseAuth
+import SDWebImage
 
 class ProfileViewController: UIViewController {
 
     let data = ["Log Out"]
+    
+    private let  activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .systemGray
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(ProfileViewTableViewCell.self, forCellReuseIdentifier: ProfileViewTableViewCell.identifier)
@@ -46,7 +55,64 @@ class ProfileViewController: UIViewController {
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableHeaderView = createTableViewHeader()
     }
+    
+    private func createTableViewHeader() -> UIView? {
+        activityIndicator.startAnimating()
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return nil
+        }
+        let safeEmail = DatabaseManager.safeEmail(email)
+        let fileName = "\(safeEmail)_profile_picture.png"
+        let path = "images/" + fileName
+        
+        
+        let headerView = UIView(frame: CGRect(x: 0,
+                                       y: 0,
+                                        width: self.view.width,
+                                       height: 300))
+        headerView.backgroundColor = .secondarySystemBackground
+        let imageView = UIImageView(frame: CGRect(x: (headerView.width - 150) / 2,
+                                       y: 75,
+                                        width: 150,
+                                       height: 150))
+        activityIndicator.frame = CGRect(x: imageView.bounds.midX - 15, y: imageView.bounds.midX - 15 , width: 30, height: 30)
+        imageView.contentMode = .scaleAspectFill
+        imageView.backgroundColor = .secondarySystemBackground
+        imageView.layer.cornerRadius = 40
+        imageView.layer.cornerCurve = .continuous
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.systemBackground.cgColor
+        imageView.clipsToBounds = true
+        imageView.addSubview(activityIndicator)
+        headerView.addSubview(imageView)
+        
+        StorageManager.downloadUrl(for: path, completion: { [weak self] result in
+            switch result {
+            case .success(let url):
+                imageView.sd_setImage(with: url)
+                self?.activityIndicator.stopAnimating()
+            case .failure(let error):
+                print(error)
+            }
+        })
+        return headerView
+    }
+    
+    func downloadImage(imageView: UIImageView, url: URL) {
+        URLSession.shared.dataTask(with: url, completionHandler: {data, _ , error in
+            guard let data = data, error == nil else { return }
+            DispatchQueue.main.sync {
+                self.activityIndicator.stopAnimating()
+                let image = UIImage(data: data)
+                imageView.image = image
+            }
+        }).resume()
+    }
+    
+    
+    
     
     /// post didChangeNotification so Scene delegate confirm it.
     private func userSgiOut(){

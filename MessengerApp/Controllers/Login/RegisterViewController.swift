@@ -228,11 +228,33 @@ class RegisterViewController: UIViewController {
                                               lastname: lastname,
                                               emailAddress: email)
                 
-                DatabaseManager.insertUser(with: chatAppUser)
-                strongSelf.userLoggedIn()
+                DatabaseManager.insertUser(with: chatAppUser, completion: { success in
+                    if success {
+                        // Upload Image
+                        guard let image = strongSelf.imageView.image,
+                              let data = image.pngData() else {
+                            return
+                        }
+                        
+                        /*
+                         /images/hardi-gmail-com_profile_picture.png
+                         */
+                        let fileName = chatAppUser.profilePictureFileName
+                        StorageManager.uploadProfilePicture(with: data, fileName: fileName, completion: { result in
+                            switch result {
+                            case .success(let downloadUrl):
+                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+//                                print(downloadUrl)
+                            case .failure(let error):
+                                print("Storage Manager Error: \(error.localizedDescription)")
+                            }
+                        })
+                        UserDefaults.standard.set(email, forKey: "email")
+                        strongSelf.userLoggedIn()
+                    }
+                })
+                
             })
-            
-            
         }
     }
     
