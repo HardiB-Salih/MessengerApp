@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class ConversationsViewController: UIViewController {
     
@@ -15,30 +16,36 @@ class ConversationsViewController: UIViewController {
         let table = UITableView()
         table.isHidden = true
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+//        table.separatorStyle = .none
         return table
     } ()
     
     private let noConversationsLable : UILabel = {
         let lable = UILabel()
+        lable.isHidden = true
         lable.text = "No Conversations"
         lable.textAlignment = .center
         lable.textColor = .systemGray
         lable.font = .systemFont(ofSize: 20, weight: .medium)
-        lable.isHidden = true
+        
         return lable
         
     }()
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Home"
         view.backgroundColor = .systemBackground
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Logout",
-            style: .done,
-            target: self,
-            action: #selector(logoutButtonTapped))
-        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose,
+                                                            target: self,
+                                                            action: #selector(didTapComposeButton))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(
+//            title: "Logout",
+//            style: .done,
+//            target: self,
+//            action: #selector(logoutButtonTapped))
         setUpSubviews()
         setUpTableView()
         fetchConversations()
@@ -48,6 +55,17 @@ class ConversationsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
+        
+        noConversationsLable.sizeToFit()
+        noConversationsLable.frame = CGRect(x: view.bounds.midX - (noConversationsLable.width / 2),
+                                   y: view.bounds.midY - (noConversationsLable.height / 2),
+                                   width: noConversationsLable.width,
+                                   height: noConversationsLable.height)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
     
@@ -70,10 +88,17 @@ class ConversationsViewController: UIViewController {
     
     private func fetchConversations() {
         tableView.isHidden = false
+//        noConversationsLable.isHidden = false
     }
     
     
     //MARK: Objc.
+    @objc private func didTapComposeButton() {
+        let vc = NewConversationsViewController()
+        let navVc = UINavigationController(rootViewController: vc)
+        present(navVc, animated: true)
+    }
+    
     @objc private func logoutButtonTapped() {
         do {
             try FirebaseAuth.Auth.auth().signOut()
@@ -94,6 +119,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = "Hello"
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
@@ -102,6 +128,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
         let vc = ChatViewController()
         vc.title = "Hardi B Salih"
         vc.navigationItem.largeTitleDisplayMode = .never
+//        vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
 }

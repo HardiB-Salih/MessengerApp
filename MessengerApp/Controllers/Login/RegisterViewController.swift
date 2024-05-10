@@ -8,9 +8,12 @@
 import UIKit
 import PhotosUI
 import FirebaseAuth
+import JGProgressHUD
 
 class RegisterViewController: UIViewController {
     
+    private let spinner = JGProgressHUD(style: .dark)
+
     private let scrollView : UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.clipsToBounds = true
@@ -199,8 +202,15 @@ class RegisterViewController: UIViewController {
         }
         
         
+        
+        spinner.show(in: view)
+        
+        
         DatabaseManager.userExists(with: email) {[weak self] isExist in
             guard let strongSelf = self else { return }
+            DispatchQueue.main.async {
+                strongSelf.spinner.dismiss()
+            }
             guard !isExist else {
                 strongSelf.showAlert(title: "Opps", message: "userAlready Exist")
                 return

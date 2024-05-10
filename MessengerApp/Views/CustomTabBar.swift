@@ -7,8 +7,9 @@
 
 import UIKit
 
-class CustomTabBar: UITabBar {
 
+class CustomTabBar: UITabBar {
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -43,9 +44,8 @@ class CustomTabBar: UITabBar {
         let tabBarHeight = CGFloat(65)
         let tabBarWidth = self.superview!.bounds.width - CGFloat(30)
         let tabBarX = CGFloat(15)
-        let tabBarY = self.superview!.bounds.height - tabBarHeight - CGFloat(24) // Offset from bottom
+        let tabBarY = self.superview!.bounds.height - tabBarHeight - CGFloat(24)
         
-
         
         self.frame = CGRect(x: tabBarX, y: tabBarY, width: tabBarWidth, height: tabBarHeight)
     }
